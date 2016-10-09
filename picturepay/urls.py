@@ -19,9 +19,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-from picture.views import PictureView
+from picture.views import PictureView, RandomUnveilView
 
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
     url(r'^$', PictureView.as_view(), name='picture-index'),
+    url(r'^random-unveil$', RandomUnveilView.as_view(), name='picture-random-unveil'),
+
 ] + static(settings.MEDIA_URL, document_root= os.path.join(settings.MEDIA_ROOT))

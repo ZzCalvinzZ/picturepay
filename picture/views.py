@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, View
 
 from picture.models import Picture
 
@@ -16,3 +16,13 @@ class PictureView(TemplateView):
 
 		return context
 
+class RandomUnveilView(View):
+
+	def post(self, request, *args, **kwargs):
+
+		number = request.POST.get('number')
+
+		picture = Picture.objects.first()
+		picture.uncover_random(int(number))
+
+		return redirect('picture-index')

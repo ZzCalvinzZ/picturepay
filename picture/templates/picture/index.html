@@ -1,5 +1,11 @@
 
 {% block content %}
 	<img src="{{ picture.covered_image.url }}" alt="picture"/>
+	<form id="random-unveil-form" action=" {% url 'picture-random-unveil' %} " method="post" accept-charset="utf-8">
+		{% csrf_token %}
+		<input type="number" name="number" value="1" />
+		<input type="submit" value="Random Unveil" />
+	</form>
+
 	
 {% endblock %}
