@@ -1,11 +1,24 @@
+{% extends "picture/base.html" %}
 
 {% block content %}
+<div class="text-xs-center">
+	<div class="row p-b-1">
+		<div class="col-md-4"></div>
+		<form id="random-unveil-form" action=" {% url 'picture-random-unveil' %} " method="post" accept-charset="utf-8">
+			{% csrf_token %}
+			<div class="form-group">
+				<div class="col-md-2">
+					<input class="form-control" type="number" name="number" placeholder="# Of Pixels" />
+				</div>
+				<div class="col-md-2">
+					<input class="btn btn-primary form-control pull-md-right" type="submit" value="Random Unveil" />
+				</div>
+			</div>
+		</form>
+		<div class="col-md-4"></div>
+	</div>
 	<img src="{{ picture.covered_image.url }}" alt="picture"/>
-	<form id="random-unveil-form" action=" {% url 'picture-random-unveil' %} " method="post" accept-charset="utf-8">
-		{% csrf_token %}
-		<input type="number" name="number" value="1" />
-		<input type="submit" value="Random Unveil" />
-	</form>
+</div>
 
 	
 {% endblock %}
