@@ -5,6 +5,7 @@ import random
 from PIL import Image
 from io import BytesIO
 
+from picturepay.storage import OverwriteStorage
 
 from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -21,7 +22,7 @@ class Picture(models.Model):
 	""" The picture model that will be uncovered"""
 
 	image = models.ImageField(upload_to=picture_path, height_field='height', width_field='width')
-	covered_image = models.ImageField(upload_to=covered_picture_path, blank=True)
+	covered_image = models.ImageField(upload_to=covered_picture_path, storage=OverwriteStorage(), blank=True)
 
 	width = models.PositiveIntegerField(blank=True)
 	height = models.PositiveIntegerField(blank=True)
