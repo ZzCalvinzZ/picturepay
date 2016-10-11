@@ -10,7 +10,18 @@ from picturepay.storage import OverwriteStorage
 from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-# Create your models here.
+class SingletonModel(models.Model):
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self.id=1
+        super(SingletonModel, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
 def picture_path(instance, filename):
 	return "pictures/{}/{}".format(uuid.uuid4(), filename)
 
@@ -29,13 +40,21 @@ class Picture(models.Model):
 
 	uncovered = models.TextField(blank=True)
 
+	complete = models.BooleanField(default=False)
+
+	def __str__(self):
+		return "{}".format(self.image.name.split('/')[-1])
+
 	def save(self, *args, **kwargs):
 
 		if not self.pk:
 			#make entire picture uncovered on creation
 			self.uncovered = '0' * self.image_size
+			super().save(*args, **kwargs)
+			self.update_covered_image()
 
-		super().save(*args, **kwargs)
+		else:
+			super().save(*args, **kwargs)
 
 	@property
 	def	image_size(self):
@@ -56,8 +75,14 @@ class Picture(models.Model):
 		""" returns a list of indices where uncovered is still 0 """
 		return [i for i, x in enumerate(self.uncovered) if x == '0']
 
+	def check_if_completely_uncovered(self):
+		if self.uncovered.find('0') == -1:
+			self.complete = True
+			self.save()
+
 	def update_covered_image(self):
 		""" save the new image from the uncovered data"""
+		self.image.open()
 		img = Image.open(BytesIO(self.image.read()))
 		img_map = img.load()
 
@@ -73,6 +98,8 @@ class Picture(models.Model):
 
 		self.save()
 
+		self.check_if_completely_uncovered()
+
 	def uncover_random(self, number):
 		""" uncover a random pixel any number of times """
 		if number > 0:
@@ -84,4 +111,31 @@ class Picture(models.Model):
 
 			self.uncovered = ''.join(slist)
 
-		self.update_covered_image()
+			self.update_covered_image()
+
+	def uncover_line(self, number):
+		if number > 0:
+			slist = list(self.uncovered)
+			index = slist.index('0')
+
+			try:
+				for i in range(0, number):
+					while True:
+						if slist[index] == '0':
+							slist[index] = '1'
+							break
+						else:
+							index += 1
+			except IndexError as e:
+				pass
+
+			self.uncovered = ''.join(slist)
+			self.update_covered_image()
+
+class Settings(SingletonModel):
+	""" this is used to find which picture the site is using at the moment"""
+	picture = models.ForeignKey(Picture)
+
+	class Meta:
+		verbose_name = "Settings"
+		verbose_name_plural = "Settings"

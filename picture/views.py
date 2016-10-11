@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View
 
-from picture.models import Picture
+from picture.models import Picture, Settings
 
 # Create your views here.
 class PictureView(TemplateView):
@@ -10,19 +10,30 @@ class PictureView(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 
-		context['picture'] = Picture.objects.first()
-
-		context['picture'].update_covered_image()
+		context['picture'] = Settings.objects.first().picture
 
 		return context
 
-class RandomUnveilView(View):
+class NumberPixelView(View):
+
+	"""get the number of pixels"""
+	def dispatch(self, request, *args, **kwargs):
+		self.number = request.POST.get('number')
+
+		self.picture = Settings.objects.first().picture
+
+		return super().dispatch(request, *args, **kwargs)
+
+class RandomUnveilView(NumberPixelView):
 
 	def post(self, request, *args, **kwargs):
+		self.picture.uncover_random(int(self.number))
 
-		number = request.POST.get('number')
+		return redirect('picture-index')
 
-		picture = Picture.objects.first()
-		picture.uncover_random(int(number))
+class LineUnveilView(NumberPixelView):
+
+	def post(self, request, *args, **kwargs):
+		self.picture.uncover_line(int(self.number))
 
 		return redirect('picture-index')
