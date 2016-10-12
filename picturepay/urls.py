@@ -19,13 +19,14 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-from picture.views import PictureView, RandomUnveilView, LineUnveilView
+from picture.views import PictureIndexView, RandomUnveilView, LineUnveilView, RectangleUnveilView
 
 urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
-    url(r'^$', PictureView.as_view(), name='picture-index'),
+    url(r'^$', PictureIndexView.as_view(), name='picture-index'),
     url(r'^random-unveil$', RandomUnveilView.as_view(), name='picture-random-unveil'),
     url(r'^line-unveil$', LineUnveilView.as_view(), name='picture-line-unveil'),
+    url(r'^rectangle-unveil$', RectangleUnveilView.as_view(), name='picture-rectangle-unveil'),
 
 ] + static(settings.MEDIA_URL, document_root= os.path.join(settings.MEDIA_ROOT))

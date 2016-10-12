@@ -66,9 +66,30 @@ class Picture(models.Model):
 			yield s[start:start+n]
 
 	@property
-	def uncovered_map(self):
-		""" returns generator for a map-like structure of the uncovered image"""
+	def uncovered_generator(self):
+		""" returns generator for a map-like structure of the uncovered image """
 		return self.chunks(self.uncovered, self.width)
+
+	@property
+	def uncovered_map(self):
+		""" a 2d matrix representation of the uncovered map """
+		map = []
+		for i, row in enumerate(self.uncovered_generator):
+			map_row = []
+			for j, val in enumerate(row):
+				map_row.append(val)
+			map.append(map_row)
+
+		return map
+
+	def update_uncovered_from_map(self, map):
+		string = ''
+
+		for row in map:
+			for val in row:
+				string += val
+
+		self.uncovered = string
 
 	@property
 	def uncovered_indices(self):
@@ -86,7 +107,7 @@ class Picture(models.Model):
 		img = Image.open(BytesIO(self.image.read()))
 		img_map = img.load()
 
-		for i, row in enumerate(self.uncovered_map):
+		for i, row in enumerate(self.uncovered_generator):
 			for j, val in enumerate(row):
 				if val == '0':
 					img_map[j, i] = (0,0,0)
@@ -131,6 +152,26 @@ class Picture(models.Model):
 
 			self.uncovered = ''.join(slist)
 			self.update_covered_image()
+
+	def uncover_rectangle(self, width, height):
+		if width > 0 and height > 0:
+			total = width * height
+			uncovered_map = self.uncovered_map
+
+			width_index = random.randrange(len(uncovered_map[0]) - width - 1)
+			height_index = random.randrange(len(uncovered_map) - height - 1)
+
+			for i in range(width_index, width_index + width + 1):
+				for j in range(height_index, height_index + height + 1):
+					uncovered_map[j][i] = '1'
+					total -= 1
+
+			self.update_uncovered_from_map(uncovered_map)
+
+			self.update_covered_image()
+
+			self.uncover_line(total)
+
 
 class Settings(SingletonModel):
 	""" this is used to find which picture the site is using at the moment"""
