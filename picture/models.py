@@ -131,6 +131,9 @@ class Picture(models.Model):
 
 		self.check_if_completely_uncovered()
 
+	def has_at_least_n_left_uncovered(self, n):
+		return self.uncovered.count('0') >= n
+
 	def uncover_random(self, number):
 		""" uncover a random pixel any number of times """
 		if number > 0:
@@ -149,7 +152,7 @@ class Picture(models.Model):
 		if number < 1:
 			raise LessThanOneError
 
-		if self.uncovered.count('0') < number:
+		if not self.has_at_least_n_left_uncovered(number):
 			raise NumberTooHighError
 
 		slist = list(self.uncovered)
@@ -187,8 +190,7 @@ class Settings(SingletonModel):
 class PaymentNote(models.Model):
 	message = models.TextField(max_length=255, blank=True)
 	url = models.TextField(max_length=255, blank=True)
-	type = models.IntegerField()
-	pixels = models.IntegerField()
+	number = models.IntegerField()
 
 	def __str__(self):
-		return message
+		return '<PaymentNote> {}'.format(message)

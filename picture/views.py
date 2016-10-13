@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, View, FormView
+from django.core.urlresolvers import reverse_lazy
 
 from picture.models import Picture, Settings
+from picture.forms import PaymentNoteForm
 
 # Create your views here.
-class PictureIndexView(TemplateView):
-	template_name='picture/index.html'
+class PictureIndexView(FormView):
+	template_name = 'picture/index.html'
+	form_class = PaymentNoteForm
+	success_url = reverse_lazy('picture-index')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -14,26 +18,16 @@ class PictureIndexView(TemplateView):
 
 		return context
 
-class PictureView(View):
+	def form_valid(self, form):
+		note = form.save()
+		self.picture.uncover_line(note.number)
+		return super().form_valid(form)
 
-	"""get the number of pixels"""
 	def dispatch(self, request, *args, **kwargs):
 		self.picture = Settings.objects.first().picture
-
 		return super().dispatch(request, *args, **kwargs)
 
-class NumberPixelView(PictureView):
-
-	"""get the number of pixels"""
-	def dispatch(self, request, *args, **kwargs):
-		self.number = request.POST.get('number')
-
-		return super().dispatch(request, *args, **kwargs)
-
-class LineUnveilView(NumberPixelView):
-
-	def post(self, request, *args, **kwargs):
-		self.picture.uncover_line(int(self.number))
-
-		return redirect('picture-index')
-
+	def get_form_kwargs(self):
+		kwargs = super().get_form_kwargs()
+		kwargs['picture'] = self.picture
+		return kwargs
