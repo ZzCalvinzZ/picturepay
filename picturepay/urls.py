@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-from picture.views import PictureIndexView, RandomUnveilView, LineUnveilView, RectangleUnveilView
+from picture.views import PictureIndexView, RandomUnveilView, LineUnveilView, SquareUnveilView
 
 urlpatterns = [
 
@@ -27,6 +27,6 @@ urlpatterns = [
     url(r'^$', PictureIndexView.as_view(), name='picture-index'),
     url(r'^random-unveil$', RandomUnveilView.as_view(), name='picture-random-unveil'),
     url(r'^line-unveil$', LineUnveilView.as_view(), name='picture-line-unveil'),
-    url(r'^rectangle-unveil$', RectangleUnveilView.as_view(), name='picture-rectangle-unveil'),
+    url(r'^square-unveil$', SquareUnveilView.as_view(), name='picture-square-unveil'),
 
 ] + static(settings.MEDIA_URL, document_root= os.path.join(settings.MEDIA_ROOT))

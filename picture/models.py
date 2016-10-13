@@ -1,6 +1,7 @@
 import itertools
 import uuid
 import random
+import math
 
 from PIL import Image
 from io import BytesIO
@@ -9,6 +10,15 @@ from picturepay.storage import OverwriteStorage
 
 from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
+
+class SquareTooBigException(Exception):
+	pass
+
+class NumberTooHighError(Exception):
+	pass
+
+class LessThanOneError(Exception):
+	pass
 
 class SingletonModel(models.Model):
 
@@ -135,43 +145,36 @@ class Picture(models.Model):
 			self.update_covered_image()
 
 	def uncover_line(self, number):
-		if number > 0:
-			slist = list(self.uncovered)
-			index = slist.index('0')
+		""" uncover a group of n pixels around one random point """
+		if number < 1:
+			raise LessThanOneError
+
+		if self.uncovered.count('0') < number:
+			raise NumberTooHighError
+
+		slist = list(self.uncovered)
+		index = random.choice(self.uncovered_indices)
+
+		count = number
+		while True:
 
 			try:
-				for i in range(0, number):
-					while True:
-						if slist[index] == '0':
-							slist[index] = '1'
-							break
-						else:
-							index += 1
+				if slist[index] == '0':
+					slist[index] = '1'
+					count -= 1
 			except IndexError as e:
-				pass
+				index = 0
+				if slist[index] == '0':
+					slist[index] = '1'
+					count -= 1
 
-			self.uncovered = ''.join(slist)
-			self.update_covered_image()
+			index += 1
+			if count == 0:
+				break
 
-	def uncover_rectangle(self, width, height):
-		if width > 0 and height > 0:
-			total = width * height
-			uncovered_map = self.uncovered_map
+		self.uncovered = ''.join(slist)
 
-			width_index = random.randrange(len(uncovered_map[0]) - width - 1)
-			height_index = random.randrange(len(uncovered_map) - height - 1)
-
-			for i in range(width_index, width_index + width + 1):
-				for j in range(height_index, height_index + height + 1):
-					uncovered_map[j][i] = '1'
-					total -= 1
-
-			self.update_uncovered_from_map(uncovered_map)
-
-			self.update_covered_image()
-
-			self.uncover_line(total)
-
+		self.update_covered_image()
 
 class Settings(SingletonModel):
 	""" this is used to find which picture the site is using at the moment"""
@@ -180,3 +183,12 @@ class Settings(SingletonModel):
 	class Meta:
 		verbose_name = "Settings"
 		verbose_name_plural = "Settings"
+
+class PaymentNote(models.Model):
+	message = models.TextField(max_length=255, blank=True)
+	url = models.TextField(max_length=255, blank=True)
+	type = models.IntegerField()
+	pixels = models.IntegerField()
+
+	def __str__(self):
+		return message

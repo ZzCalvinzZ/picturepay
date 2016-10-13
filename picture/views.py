@@ -30,13 +30,6 @@ class NumberPixelView(PictureView):
 
 		return super().dispatch(request, *args, **kwargs)
 
-class RandomUnveilView(NumberPixelView):
-
-	def post(self, request, *args, **kwargs):
-		self.picture.uncover_random(int(self.number))
-
-		return redirect('picture-index')
-
 class LineUnveilView(NumberPixelView):
 
 	def post(self, request, *args, **kwargs):
@@ -44,12 +37,3 @@ class LineUnveilView(NumberPixelView):
 
 		return redirect('picture-index')
 
-class RectangleUnveilView(PictureView):
-
-	def post(self, request, *args, **kwargs):
-		width = request.POST.get('width')
-		height = request.POST.get('height')
-
-		self.picture.uncover_rectangle(int(width), int(height))
-
-		return redirect('picture-index')

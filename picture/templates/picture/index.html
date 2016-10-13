@@ -5,22 +5,6 @@
 
 	<div class="row p-b-1">
 		<div class="col-md-4"></div>
-		<form id="random-unveil-form" action=" {% url 'picture-random-unveil' %} " method="post" accept-charset="utf-8">
-			{% csrf_token %}
-			<div class="form-group">
-				<div class="col-md-2">
-					<input class="form-control" type="number" name="number" placeholder="# Of Pixels" />
-				</div>
-				<div class="col-md-2">
-					<input class="btn btn-primary form-control pull-md-right" type="submit" value="Random Unveil" />
-				</div>
-			</div>
-		</form>
-		<div class="col-md-4"></div>
-	</div>
-
-	<div class="row p-b-1">
-		<div class="col-md-4"></div>
 		<form id="line-unveil-form" action=" {% url 'picture-line-unveil' %} " method="post" accept-charset="utf-8">
 			{% csrf_token %}
 			<div class="form-group">
@@ -28,26 +12,7 @@
 					<input class="form-control" type="number" name="number" placeholder="# Of Pixels" />
 				</div>
 				<div class="col-md-2">
-					<input class="btn btn-primary form-control pull-md-right" type="submit" value="Line Unveil" />
-				</div>
-			</div>
-		</form>
-		<div class="col-md-4"></div>
-	</div>
-
-	<div class="row p-b-1">
-		<div class="col-md-4"></div>
-		<form id="rectangle-unveil-form" action=" {% url 'picture-rectangle-unveil' %} " method="post" accept-charset="utf-8">
-			{% csrf_token %}
-			<div class="form-group">
-				<div class="col-md-1">
-					<input class="form-control" type="number" name="width" placeholder="Width" />
-				</div>
-				<div class="col-md-1">
-					<input class="form-control" type="number" name="height" placeholder="Height" />
-				</div>
-				<div class="col-md-2">
-					<input class="btn btn-primary form-control pull-md-right" type="submit" value="Rectangle Unveil" />
+					<input class="btn btn-primary form-control pull-md-right" type="submit" value="Unveil" />
 				</div>
 			</div>
 		</form>
