@@ -25,8 +25,6 @@ urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
     url(r'^$', PictureIndexView.as_view(), name='picture-index'),
-    url(r'^random-unveil$', RandomUnveilView.as_view(), name='picture-random-unveil'),
     url(r'^line-unveil$', LineUnveilView.as_view(), name='picture-line-unveil'),
-    url(r'^square-unveil$', SquareUnveilView.as_view(), name='picture-square-unveil'),
 
 ] + static(settings.MEDIA_URL, document_root= os.path.join(settings.MEDIA_ROOT))
