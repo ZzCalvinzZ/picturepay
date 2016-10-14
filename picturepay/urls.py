@@ -14,16 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 import os
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-from picture.views import PictureIndexView
+from picture.views import PictureIndexView, PaymentView
 
 urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
+    url(r'^paypal/', include('paypal.standard.ipn.urls')),
     url(r'^$', PictureIndexView.as_view(), name='picture-index'),
+    url(r'^payment/$', PaymentView.as_view(), name='picture-payment'),
 
-] + static(settings.MEDIA_URL, document_root= os.path.join(settings.MEDIA_ROOT))
+
+] + static(settings.MEDIA_URL, document_root=os.path.join(settings.MEDIA_ROOT)) \
+  + static(settings.STATIC_URL, document_root=os.path.join(settings.STATIC_ROOT))

@@ -4,10 +4,10 @@ from picture.models import PaymentNote, Picture
 class PaymentNoteForm(forms.ModelForm):
 	class Meta:
 		model = PaymentNote
-		fields = ['message', 'name', 'number']
+		fields = ['url', 'name', 'number']
 
 		widgets= {
-			'message': forms.TextInput(attrs={'class': 'form-control'}),
+			'url': forms.TextInput(attrs={'class': 'form-control'}),
 			'name': forms.TextInput(attrs={'class': 'form-control'}),
 			'number': forms.NumberInput(attrs={'class': 'form-control'}),
 		}

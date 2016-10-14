@@ -1,0 +1,12 @@
+{% extends "picture/base.html" %}
+{% load static %}
+
+{% block title %}Million Dollar Surprise - Payment{% endblock %}
+
+{% block extra_scripts %}{% endblock %}
+
+{% block content %}
+	{{ paypal_form.render }}
+
+{% endblock %}
+

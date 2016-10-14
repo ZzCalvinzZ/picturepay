@@ -189,9 +189,9 @@ class Settings(SingletonModel):
 
 class PaymentNote(models.Model):
 	name = models.TextField(max_length=255, blank=True)
-	message = models.TextField(max_length=255, blank=True)
+	url = models.TextField(max_length=255, blank=True)
 	number = models.IntegerField()
 	picture = models.ForeignKey(Picture, related_name='note')
 
 	def __str__(self):
-		return '<PaymentNote> {}'.format(self.message)
+		return '<PaymentNote> {}'.format(self.name)
