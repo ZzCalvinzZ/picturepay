@@ -1,0 +1,29 @@
+:root {
+	--color-1: #951F2B;
+	--color-2: #535233;
+	--color-3: #A5A36C;
+	--color-4: #E0DFB1;
+	--color-5: #F5F4D7;
+}
+
+.pixel {
+	width: 10px;
+	height: 10px;
+	display: inline-block;
+}
+
+a.leaderboard-item {
+	color: inherit;	
+}
+
+a.leaderboard-item .card {
+	background-color: var(--color-4);
+}
+
+a.leaderboard-item:hover {
+	text-decoration: inherit;
+}
+
+a.leaderboard-item:hover .card {
+	background-color: var(--color-5);
+}

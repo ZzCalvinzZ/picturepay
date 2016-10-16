@@ -220,8 +220,8 @@ class Pixel(models.Model):
 	b = models.IntegerField()
 
 class PaymentNote(models.Model):
-	name = models.TextField(max_length=255, blank=True)
-	url = models.TextField(max_length=255, blank=True)
+	name = models.CharField(max_length=255, blank=True)
+	url = models.URLField(max_length=255, blank=True)
 	number = models.IntegerField()
 	picture = models.ForeignKey(Picture, related_name='note')
 	pixels = models.ManyToManyField(Pixel, related_name='notes')

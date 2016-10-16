@@ -30,6 +30,11 @@ class PictureIndexView(FormView):
 			'name': note.name,
 			'url': note.url,
 			'number': note.number,
+			'pixels': [{
+				'r': pixel.r,
+				'g': pixel.g,
+				'b': pixel.b,
+			} for pixel in note.pixels.all()]
 		} for note in PaymentNote.objects.filter(picture=self.picture).order_by('-number')]
 
 
@@ -118,14 +123,15 @@ def create_payment_note(note_info):
 		img = note.picture.pillow_image
 
 		for coord in coords:
-			r, g, b = img.getpixel((i,j))
+			r, g, b = img.getpixel((coord['x'], coord['y']))
+
 			note.pixels.add(Pixel.objects.create(
-				x = coord['x'], 
-				y = coord['y']),
+				x = coord['x'],
+				y = coord['y'],
 				r = r,
 				g = g,
 				b = b
-			)
+			))
 
 		note.save()
 

@@ -4,7 +4,7 @@
 {% block title %}Million Dollar Surprise{% endblock %}
 
 {% block extra_scripts %}
-	<script src='{% static "js/index.js" %}'></script>
+	<script src='{% static "js/main.js" %}'></script>
 {% endblock %}
 
 {% block content %}
@@ -60,12 +60,7 @@
 		<div id="leaderboard-section" class="col-md-6">
 			<div class="row p-b-1 p-t-1">
 				{% for note in payment_notes %}
-					<div class="card">
-						<div class="card-block">
-							<h4 class="card-title">{{ note.name }} - {{ note.number }} pixels revealed</h4>
-							<p class="card-text">{{ note.url }}</p>
-						</div>
-					</div>
+					{% include "picture/note.html" %}
 				{% endfor %}
 				<div class="col-md-4"></div>
 				<div class="col-md-4"></div>

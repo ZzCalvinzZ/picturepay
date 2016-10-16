@@ -1,0 +1,13 @@
+<a class="leaderboard-item" href="http://{{ note.url }}" target="_blank">
+	<div class="card">
+		<div class="card-block">
+			<h4 class="card-title">{{ note.name }}</h4>
+			<p class="card-text">{{ note.number }} pixels revealed</p>
+			<div class="pixels">
+				{% for pixel in note.pixels %}
+					<div class="pixel" style="background-color: rgb({{ pixel.r }}, {{ pixel.g }}, {{ pixel.b }});"></div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</a>
