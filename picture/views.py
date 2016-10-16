@@ -1,3 +1,5 @@
+from PIL import Image
+
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, FormView
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -8,7 +10,7 @@ from django.conf import settings
 
 from paypal.standard.forms import PayPalPaymentsForm
 
-from picture.models import Picture, Settings, PaymentNote
+from picture.models import Picture, Settings, Pixel, PaymentNote
 from picture.forms import PaymentNoteForm
 
 from paypal.standard.models import ST_PP_COMPLETED
@@ -19,7 +21,6 @@ from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 class PictureIndexView(FormView):
 	template_name = 'picture/index.html'
 	form_class = PaymentNoteForm
-	success_url = reverse_lazy('picture-payment')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -54,6 +55,14 @@ class PictureIndexView(FormView):
 		kwargs['picture'] = self.picture
 		return kwargs
 
+	def get_success_url(self):
+		if getattr(settings,'NO_PAYMENTS', False) == True:
+
+			create_payment_note(self.request.session['payment_note'])
+
+			return reverse('picture-payment-success')
+		else:
+			return reverse('picture-payment')
 
 class PaymentView(TemplateView):
 	template_name = 'picture/payment.html'
@@ -92,6 +101,34 @@ class PaymentView(TemplateView):
 
 		return super().dispatch(request, *args, **kwargs)
 
+class PaymentSuccessView(TemplateView):
+	template_name = 'picture/payment_success.html'
+
+def create_payment_note(note_info):
+
+	form = PaymentNoteForm(note_info, picture=Settings.objects.first().picture)
+
+	if form.is_valid():
+		note = form.save(commit=False)
+		note.picture = Settings.objects.first().picture
+		note.save()
+
+		coords = note.picture.uncover_line(note.number)
+
+		img = note.picture.pillow_image
+
+		for coord in coords:
+			r, g, b = img.getpixel((i,j))
+			note.pixels.add(Pixel.objects.create(
+				x = coord['x'], 
+				y = coord['y']),
+				r = r,
+				g = g,
+				b = b
+			)
+
+		note.save()
+
 def handle_payment(sender, **kwargs):
 	ipn_obj = sender
 	if ipn_obj.payment_status == ST_PP_COMPLETED:
@@ -103,18 +140,12 @@ def handle_payment(sender, **kwargs):
 			# Not a valid payment
 			return
 
-		payment_note = {
+		note_info = {
 			'name': ipn_obj.custom,
 			'url': ipn_obj.invoice,
 			'number': ipn_obj.mc_gross,
 		}
 
-		form = PaymentNoteForm(payment_note, picture=Settings.objects.first().picture)
-		if form.is_valid():
-			note = form.save(commit=False)
-			note.picture = Settings.objects.first().picture
-			note.save()
-
-			note.picture.uncover_line(note.number)
+		create_payment_note(note_info)
 
 valid_ipn_received.connect(handle_payment)

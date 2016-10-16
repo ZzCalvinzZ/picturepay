@@ -111,10 +111,16 @@ class Picture(models.Model):
 			self.complete = True
 			self.save()
 
-	def update_covered_image(self):
-		""" save the new image from the uncovered data"""
+
+	@property
+	def pillow_image(self):
 		self.image.open()
 		img = Image.open(BytesIO(self.image.read()))
+		return img
+
+	def update_covered_image(self):
+		""" save the new image from the uncovered data"""
+		img = self.pillow_image
 		img_map = img.load()
 
 		for i, row in enumerate(self.uncovered_generator):
@@ -147,6 +153,15 @@ class Picture(models.Model):
 
 			self.update_covered_image()
 
+	def uncovered_coord_from_string_index(self, index):
+		""" return the x and y coordinates for the map representation of uncovered """
+		coord = {
+			'x': index % self.width,
+			'y': (index + 1) / self.width
+		}
+
+		return coord
+
 	def uncover_line(self, number):
 		""" uncover a group of n pixels around one random point """
 		if number < 1:
@@ -159,16 +174,20 @@ class Picture(models.Model):
 		index = random.choice(self.uncovered_indices)
 
 		count = number
+		index_list = []
+
 		while True:
 
 			try:
 				if slist[index] == '0':
 					slist[index] = '1'
+					index_list.append(index)
 					count -= 1
 			except IndexError as e:
 				index = 0
 				if slist[index] == '0':
 					slist[index] = '1'
+					index_list.append(index)
 					count -= 1
 
 			index += 1
@@ -179,6 +198,8 @@ class Picture(models.Model):
 
 		self.update_covered_image()
 
+		return [self.uncovered_coord_from_string_index(string) for string in index_list ]
+
 class Settings(SingletonModel):
 	""" this is used to find which picture the site is using at the moment"""
 	picture = models.ForeignKey(Picture)
@@ -187,11 +208,23 @@ class Settings(SingletonModel):
 		verbose_name = "Settings"
 		verbose_name_plural = "Settings"
 
+class Pixel(models.Model):
+	""" maps to a pixel in a picture """
+
+	x = models.IntegerField()
+	y = models.IntegerField()
+
+	# rgb color values
+	r = models.IntegerField()
+	g = models.IntegerField()
+	b = models.IntegerField()
+
 class PaymentNote(models.Model):
 	name = models.TextField(max_length=255, blank=True)
 	url = models.TextField(max_length=255, blank=True)
 	number = models.IntegerField()
 	picture = models.ForeignKey(Picture, related_name='note')
+	pixels = models.ManyToManyField(Pixel, related_name='notes')
 
 	def __str__(self):
 		return '<PaymentNote> {}'.format(self.name)

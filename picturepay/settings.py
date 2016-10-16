@@ -26,6 +26,8 @@ SECRET_KEY = 'b@*wcwnu25hssod0e--rd2f3j*9u$zy2x^rv1r%k2h!835o&2q'
 DEBUG = True
 PAYPAL_TEST = True
 
+NO_PAYMENTS = True
+
 ALLOWED_HOSTS = []
 
 # Application definition
