@@ -36,7 +36,7 @@ class PictureIndexView(FormView):
 				'r': pixel.r,
 				'g': pixel.g,
 				'b': pixel.b,
-			} for pixel in note.pixels.all()]
+				} for pixel in note.pixels.all()[:50]]
 		} for note in PaymentNote.objects.filter(picture=self.picture).order_by('-number')]
 
 
