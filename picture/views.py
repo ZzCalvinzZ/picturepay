@@ -1,5 +1,7 @@
 from PIL import Image
 
+import stripe
+
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, FormView
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -77,6 +79,7 @@ class PaymentView(TemplateView):
 
 		context['picture'] = Settings.objects.first().picture
 		context['paypal_form'] = self.paypal_form
+		context['stripe'] = self.stripe_options
 
 		return context
 
@@ -84,6 +87,7 @@ class PaymentView(TemplateView):
 	def dispatch(self, request, *args, **kwargs):
 		self.picture = Settings.objects.first().picture
 
+		# PAYPAL stuff
 		#TODO
 		# if settings.DEBUG == True:
 		business = "calvincollins_5-facilitator@hotmail.com"
@@ -95,7 +99,7 @@ class PaymentView(TemplateView):
 			"amount": request.session.get('payment_note').get('number'),
 			"invoice": request.session.get('payment_note').get('url'),
 			"custom": request.session.get('payment_note').get('name'),
-			"item_name": "Pixel Unveil",
+			"item_name": "Pixel Reveal",
 			# "invoice": "unique-invoice-id",
 			"notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
 			"return_url": request.build_absolute_uri(reverse('picture-payment')),
@@ -104,10 +108,45 @@ class PaymentView(TemplateView):
 
 		self.paypal_form = PayPalPaymentsForm(initial=paypal_options)
 
+		#STRIPE stuff
+		self.stripe_options = {
+			'p_key': settings.STRIPE_PUBLISH,
+			'amount': request.session.get('payment_note').get('number') * 100,
+			'name': 'Calvin Collins',
+			'description': 'Pixel Reveal',
+		}
+
 		return super().dispatch(request, *args, **kwargs)
 
 class PaymentSuccessView(TemplateView):
 	template_name = 'picture/payment_success.html'
+
+class PaymentErrorView(TemplateView):
+	template_name = 'picture/payment_error.html'
+
+class StripeView(View):
+
+	def post(self, request, *args, **kwargs):
+		self.picture = Settings.objects.first().picture
+
+		stripe.api_key = settings.STRIPE_SECRET
+
+		token = request.POST['stripeToken']
+
+		try:
+			charge = stripe.Charge.create(
+				amount = request.session.get('payment_note').get('number') * 100,
+				currency="usd",
+				source=token,
+				description="Pixel Reveal"
+				)
+		except stripe.error.CardError as e:
+			# The card has been declined
+			return redirect(reverse('picture-payment-error'))
+
+		else:
+			create_payment_note(self.request.session['payment_note'])
+			return redirect(reverse('picture-payment-success'))
 
 def create_payment_note(note_info):
 

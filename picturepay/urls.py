@@ -19,7 +19,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-from picture.views import PictureIndexView, PaymentView, PaymentSuccessView
+from picture.views import PictureIndexView, PaymentView, PaymentSuccessView, \
+            PaymentErrorView, StripeView
 
 urlpatterns = [
 
@@ -27,7 +28,9 @@ urlpatterns = [
     url(r'^paypal/', include('paypal.standard.ipn.urls')),
     url(r'^$', PictureIndexView.as_view(), name='picture-index'),
     url(r'^payment/$', PaymentView.as_view(), name='picture-payment'),
+    url(r'^stripe/$', StripeView.as_view(), name='picture-stripe'),
     url(r'^payment/success/$', PaymentSuccessView.as_view(), name='picture-payment-success'),
+    url(r'^payment/error/$', PaymentErrorView.as_view(), name='picture-payment-error'),
 
 
 ] + static(settings.MEDIA_URL, document_root=os.path.join(settings.MEDIA_ROOT)) \

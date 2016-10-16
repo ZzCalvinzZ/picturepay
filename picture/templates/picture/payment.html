@@ -6,7 +6,26 @@
 {% block extra_scripts %}{% endblock %}
 
 {% block content %}
-	{{ paypal_form.render }}
+
+	<div id="stripe-block">
+		<form action="{% url 'picture-stripe' %}" method="POST">
+			{% csrf_token %}	
+			<script
+				src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+				data-key="{{ stripe.p_key }}"
+				data-amount="{{ stripe.amount }}.00"
+				data-name="{{ stripe.name }}"
+				data-description="{{ stripe.description }}"
+				data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+				data-locale="auto"
+				data-currency="usd">
+			</script>
+		</form>
+	</div>
+
+	<div id="paypal-block">
+		{{ paypal_form.render }}
+	</div>
 
 {% endblock %}
 
