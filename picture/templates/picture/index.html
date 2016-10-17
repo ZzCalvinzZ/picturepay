@@ -1,80 +1,52 @@
 {% extends "picture/base.html" %}
 {% load static %}
 
-{% block title %}Million Dollar Surprise{% endblock %}
+{% block title %}The Great Picture Reveal{% endblock %}
 
 {% block extra_scripts %}
 	<script src='{% static "js/main.js" %}'></script>
 {% endblock %}
 
 {% block content %}
-<div class="text-xs-center">
+<div class="text-xs-center m-a-2">
 
+	{% if picture.complete %}
+		<div class="text-xs-center">
+			All Uncovered!
+		</div>
+	{% endif %}
 	<div class="row">
-		<div id="picture-unveil-section" class="col-md-6">
-			<div class="row p-b-1 p-t-1">
-				<form id="line-unveil-form" action="." method="post" accept-charset="utf-8">
-					{% csrf_token %}
-					<div class="form-group">
-						<div class="row p-b-1">
-							<div class="col-md-4 text-md-right">
-								{{ form.number.label_tag }}
-							</div>
-							<div class="col-md-7">
-								{{ form.number }} {{ form.number.errors }}
-							</div>
-						</div>
-						<div class="row p-b-1">
-							<div class="col-md-4 text-md-right">
-								{{ form.name.label_tag }}
-							</div>
-							<div class="col-md-7">
-								{{ form.name }} {{ form.name.errors }}
-							</div>
-						</div>
-						<div class="row p-b-1">
-							<div class="col-md-4 text-md-right">
-								{{ form.url.label_tag }}
-							</div>
-							<div class="col-md-7">
-								{{ form.url }} {{ form.url.errors }}
-							</div>
-						</div>
-						<div class="row p-b-1">
-							<div class="col-md-4"></div>
-							<div class="col-md-4">
-								<input class="btn btn-primary form-control" type="submit" value="Unveil" />
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-			{% if picture.complete %}
-				<div class="text-xs-center">
-					All Uncovered!
-				</div>
-			{% endif %}
-			<div class="row">
-				<div class="col-md-12">
-					<img class="picture" src="{{ picture.covered_image.url }}?rand=1234" alt="picture"/>
-				</div>
-			</div>
-		</div>
+		<div class="col-md-5 ">
+			<p>
+			Pellentesque in ipsum id orci porta dapibus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Nulla quis lorem ut libero malesuada feugiat. Nulla porttitor accumsan tincidunt. Proin eget tortor risus. Cras ultricies ligula sed magna dictum porta. Nulla quis lorem ut libero malesuada feugiat. Proin eget tortor risus. Pellentesque in ipsum id orci porta dapibus.
 
-		<div id="leaderboard-section" class="col-md-6">
-			<div class="row p-b-1 p-t-1">
-				{% for note in payment_notes %}
-					{% include "picture/note.html" %}
-				{% endfor %}
-				<div class="col-md-4"></div>
-				<div class="col-md-4"></div>
+Nulla quis lorem ut libero malesuada feugiat. Nulla porttitor accumsan tincidunt. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin molestie malesuada. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Nulla quis lorem ut libero malesuada feugiat. Proin eget tortor risus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.
+			</p>
+		</div>
+		<div class="col-md-6">
+			<div id="picture-unveil-section" class="m-b-2 p-x-3 p-b-3">
+				<button class="btn btn-primary m-b-3" data-toggle="modal" data-target="#reveal-form">Reveal Some Pixels!</button>
+				<img class="picture" src="{{ picture.covered_image.url }}?rand=1234" alt="picture"/>
+			</div>
+
+			<div id="leaderboard-section" class="card p-x-3">
+				<div class="row p-b-1 p-t-1">
+					<h2>These are the top revealers.</h2>
+					<h4>Click on a card to go to the revealers website!</h4>
+
+					{% for note in payment_notes %}
+						{% include "picture/note.html" %}
+					{% endfor %}
+
+					<div class="col-md-4"></div>
+					<div class="col-md-4"></div>
+				</div>
 			</div>
 		</div>
-		
 	</div>
-
 
 </div>
 
+{% include "picture/reveal_form.html" %}
 	
 {% endblock %}

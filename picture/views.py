@@ -159,7 +159,7 @@ def create_payment_note(note_info):
 
 		coords = note.picture.uncover_line(note.number)
 
-		img = note.picture.pillow_image
+		img = note.picture.pillow_image.convert('RGB')
 
 		for coord in coords:
 			r, g, b = img.getpixel((coord['x'], coord['y']))

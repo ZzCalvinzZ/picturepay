@@ -1,0 +1,53 @@
+<div class="modal fade" id="reveal-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Pixel Reveal!</h4>
+			</div>
+			<div class="modal-body">
+				<form id="line-unveil-form" action="." method="post" accept-charset="utf-8">
+					{% csrf_token %}
+					<div class="form-group">
+						<div class="row p-b-1">
+							<div class="col-md-4 text-md-right">
+								{{ form.number.label_tag }}
+							</div>
+							<div class="col-md-7">
+								{{ form.number }} {{ form.number.errors }}
+							</div>
+						</div>
+						<div class="row p-b-1">
+							<div class="col-md-4 text-md-right">
+								{{ form.name.label_tag }}
+							</div>
+							<div class="col-md-7">
+								{{ form.name }} {{ form.name.errors }}
+							</div>
+						</div>
+						<div class="row p-b-1">
+							<div class="col-md-4 text-md-right">
+								{{ form.url.label_tag }}
+							</div>
+							<div class="col-md-7">
+								{{ form.url }} {{ form.url.errors }}
+							</div>
+						</div>
+						<div class="row p-b-1">
+							<div class="col-md-4"></div>
+							<div class="col-md-4">
+								<input class="btn btn-primary form-control" type="submit" value="Unveil" />
+							</div>
+						</div>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
