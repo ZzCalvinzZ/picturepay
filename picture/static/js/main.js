@@ -1,3 +1,3 @@
 $(function () {
-	console.log("value");
+	$(window).stuck();
 });
