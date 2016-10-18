@@ -157,7 +157,7 @@ class Picture(models.Model):
 		""" return the x and y coordinates for the map representation of uncovered """
 		coord = {
 			'x': index % self.width,
-			'y': (index + 1) / self.width
+			'y': (index + 1) // self.width
 		}
 
 		return coord

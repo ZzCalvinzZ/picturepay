@@ -1,6 +1,7 @@
 from PIL import Image
 
 import stripe
+import datetime
 
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, FormView
@@ -28,6 +29,7 @@ class PictureIndexView(FormView):
 		context = super().get_context_data(**kwargs)
 
 		context['picture'] = Settings.objects.first().picture
+		context['random'] = datetime.datetime.now()
 		context['payment_notes'] = [{
 			'name': note.name,
 			'url': note.url,
@@ -88,12 +90,7 @@ class PaymentView(TemplateView):
 	def dispatch(self, request, *args, **kwargs):
 		self.picture = Settings.objects.first().picture
 
-		# PAYPAL stuff
-		#TODO
-		# if settings.DEBUG == True:
-		business = "calvincollins_5-facilitator@hotmail.com"
-		# else:
-			# business = "calvinkcollins@gmail.com"
+		business = settings.PAYPAL_EMAIL
 
 		paypal_options = {
 			"business": business,
@@ -160,9 +157,13 @@ def create_payment_note(note_info):
 
 		coords = note.picture.uncover_line(note.number)
 
+		import ipdb; ipdb.set_trace()
 		img = note.picture.pillow_image.convert('RGB')
 
-		for coord in coords:
+		for i, coord in enumerate(coords):
+			if i > 50:
+				break
+
 			r, g, b = img.getpixel((coord['x'], coord['y']))
 
 			note.pixels.add(Pixel.objects.create(
