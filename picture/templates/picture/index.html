@@ -5,7 +5,7 @@
 
 {% block extra_scripts %}
 	<script src='{% static "js/main.js" %}'></script>
-	<script src='{% static "js/vendor/jquery.stuck.js" %}'></script>
+	<script src='{% static "vendor/jquery.stuck.js" %}'></script>
 {% endblock %}
 
 {% block content %}
@@ -21,7 +21,7 @@
 		<div class="col-md-5 stuck">
 			<div id="picture-unveil-section" class="m-b-2 p-x-3 p-b-3">
 				<button class="open-reveal-form btn btn-primary m-y-3" data-toggle="modal" data-target="#reveal-form">Reveal Some Pixels!</button>
-				<img class="picture" src="{{ picture.covered_image.url }}?rand=1234" alt="picture"/>
+				<img class="picture" src="{{ picture.covered_image.url }}/?rand=1234" alt="picture"/>
 			</div>
 
 		</div>

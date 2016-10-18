@@ -5,7 +5,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title">Pixel Reveal!</h4>
+				<h4 class="modal-title">Pixel Reveal! (1$ per 1 pixel)</h4>
 			</div>
 			<div class="modal-body">
 				<form id="line-unveil-form" action="." method="post" accept-charset="utf-8">
@@ -16,7 +16,17 @@
 								{{ form.number.label_tag }}
 							</div>
 							<div class="col-md-7">
-								{{ form.number_preset }}{{ form.number }} {{ form.number.errors }}
+								<div class="row">
+									<div class="col-xs-8">
+										{% for preset in form.number_preset %}
+											{{ preset }}
+										{% endfor %}
+									</div>
+									<div class="col-xs-4 pull-xs-left">
+										{{ form.number }}
+									</div>
+								</div>
+								{{ form.number.errors }}
 							</div>
 						</div>
 						<div class="row p-b-1">
@@ -38,7 +48,7 @@
 						<div class="row p-b-1">
 							<div class="col-md-4"></div>
 							<div class="col-md-4">
-								<input class="btn btn-primary form-control" type="submit" value="Unveil" />
+								<input class="btn btn-primary form-control" type="submit" value="Reveal!" />
 							</div>
 						</div>
 					</div>

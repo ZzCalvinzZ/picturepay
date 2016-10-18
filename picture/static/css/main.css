@@ -27,6 +27,10 @@ body {
 	background-color: #f1f5e2;
 }
 
+#line-unveil-form input[name=number_preset] {
+	margin-left: 2px;
+}
+
 a.leaderboard-item {
 	color: inherit;	
 }

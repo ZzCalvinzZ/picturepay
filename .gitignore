@@ -92,3 +92,4 @@ ENV/
 media/
 *.sqlite3
 local.py
+.DS_Store

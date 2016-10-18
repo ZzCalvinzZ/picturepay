@@ -9,12 +9,16 @@ NUMBER_PRESET_OPTIONS = (
 )
 
 class PaymentNoteForm(forms.ModelForm):
-	number_preset = forms.ChoiceField(required=False, choices=NUMBER_PRESET_OPTIONS)
-	number = forms.IntegerField(required=False,widget=forms.NumberInput(attrs={'class': 'form-control'}))
+	number_preset = forms.ChoiceField(required=False, choices=NUMBER_PRESET_OPTIONS, widget=forms.RadioSelect())
+	number = forms.IntegerField(label='# of Pixels', required=False,widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
 	class Meta:
 		model = PaymentNote
 		fields = ['url', 'name', 'number']
+
+		labels = {
+			'url': 'URL (optional)'
+		}
 
 		widgets= {
 			'url': forms.TextInput(attrs={'class': 'form-control'}),
@@ -23,7 +27,8 @@ class PaymentNoteForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		self.picture = kwargs.pop('picture')
-		return super().__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
+		self.initial['number_preset'] = 5
 
 	def clean(self):
 		cleaned_data = super().clean()
