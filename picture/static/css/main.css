@@ -87,3 +87,15 @@ a.leaderboard-item:hover .card {
 			0px 0px 0px 18px rgba(0,0,0,0.2),
 			6px 6px 8px 17px #555;
 }
+
+.payment-success-check {
+	color: green;
+}
+
+.payment-error-x {
+	color: red;
+}
+
+.payment-card {
+	background-color: #f3f2e1;
+}

@@ -80,6 +80,7 @@ class PaymentView(TemplateView):
 		context['picture'] = Settings.objects.first().picture
 		context['paypal_form'] = self.paypal_form
 		context['stripe'] = self.stripe_options
+		context['amount'] = self.request.session.get('payment_note').get('number')
 
 		return context
 

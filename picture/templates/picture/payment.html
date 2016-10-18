@@ -7,24 +7,40 @@
 
 {% block content %}
 
-	<div id="stripe-block">
-		<form action="{% url 'picture-stripe' %}" method="POST">
-			{% csrf_token %}	
-			<script
-				src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-				data-key="{{ stripe.p_key }}"
-				data-amount="{{ stripe.amount }}.00"
-				data-name="{{ stripe.name }}"
-				data-description="{{ stripe.description }}"
-				data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-				data-locale="auto"
-				data-currency="usd">
-			</script>
-		</form>
-	</div>
+	<div class="row text-xs-center m-t-3 p-t-3">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6 card payment-card p-t-1">
+			<h2>{{ amount }} pixels = ${{ amount }}</h2>
+			<h4>Please select how you want to pay:</h4>
 
-	<div id="paypal-block">
-		{{ paypal_form.render }}
+			<div class="row m-t-2">
+				<div id="stripe-block" class="col-sm-6">
+					<h5>Pay with Stripe:</h5>
+					<form action="{% url 'picture-stripe' %}" method="POST">
+						{% csrf_token %}	
+						<script
+							src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+							data-key="{{ stripe.p_key }}"
+							data-amount="{{ stripe.amount }}"
+							data-name="{{ stripe.name }}"
+							data-description="{{ stripe.description }}"
+							data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+							data-locale="auto"
+							data-currency="usd">
+						</script>
+					</form>	
+					
+				</div>
+
+				<div id="paypal-block" class="col-sm-6 p-b-1">
+					<h5>Pay with Paypal:</h5>
+					{{ paypal_form.render }}
+				</div>
+			</div>
+
+
+		</div>
+
 	</div>
 
 {% endblock %}
