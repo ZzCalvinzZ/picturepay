@@ -157,7 +157,6 @@ def create_payment_note(note_info):
 
 		coords = note.picture.uncover_line(note.number)
 
-		import ipdb; ipdb.set_trace()
 		img = note.picture.pillow_image.convert('RGB')
 
 		for i, coord in enumerate(coords):
