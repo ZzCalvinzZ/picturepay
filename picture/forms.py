@@ -43,7 +43,7 @@ class PaymentNoteForm(forms.ModelForm):
 		else:
 			number = cleaned_data['number'] = int(preset)
 
-			if number and not self.picture.has_at_least_n_left_uncovered(int(number)):
-				self.add_error('number', "Not enough pixels are left to process that request")
+		if number and not self.picture.has_at_least_n_left_uncovered(int(number)):
+			self.add_error('number', "Not enough pixels are left to process that request")
 
 		return cleaned_data
