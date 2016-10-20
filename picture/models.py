@@ -126,7 +126,7 @@ class Picture(models.Model):
 		for i, row in enumerate(self.uncovered_generator):
 			for j, val in enumerate(row):
 				if val == '0':
-					img_map[j, i] = (50, 50, 50)
+					img_map[j, i] = (170, 214, 245)
 
 		buf = BytesIO()
 		img.save(buf, format=img.format)
