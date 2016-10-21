@@ -99,3 +99,10 @@ a.leaderboard-item:hover .card {
 .payment-card {
 	background-color: #f3f2e1;
 }
+
+.errorlist {
+	background-color: #f2dede;
+    border-color: #ebcccc;
+    color: #a94442;
+    list-style: none;
+}
