@@ -157,7 +157,7 @@ class Picture(models.Model):
 		""" return the x and y coordinates for the map representation of uncovered """
 		coord = {
 			'x': index % self.width,
-			'y': (index + 1) // self.width
+			'y': index // self.width
 		}
 
 		return coord
@@ -198,7 +198,7 @@ class Picture(models.Model):
 
 		self.update_covered_image()
 
-		return [self.uncovered_coord_from_string_index(string) for string in index_list ]
+		return [self.uncovered_coord_from_string_index(index) for index in index_list ]
 
 class Settings(SingletonModel):
 	""" this is used to find which picture the site is using at the moment"""
