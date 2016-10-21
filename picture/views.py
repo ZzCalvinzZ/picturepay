@@ -100,7 +100,7 @@ class PaymentView(TemplateView):
 			"item_name": "Pixel Reveal",
 			# "invoice": "unique-invoice-id",
 			"notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
-			"return_url": request.build_absolute_uri(reverse('picture-payment-success')),
+			"return_url": request.build_absolute_uri(reverse('picture-paypal-payment-success')),
 			"cancel_return": request.build_absolute_uri(reverse('picture-index')),
 		}
 
@@ -118,6 +118,9 @@ class PaymentView(TemplateView):
 
 class PaymentSuccessView(TemplateView):
 	template_name = 'picture/payment_success.html'
+
+class PaypalPaymentSuccessView(TemplateView):
+	template_name = 'picture/paypal_payment_success.html'
 
 class PaymentErrorView(TemplateView):
 	template_name = 'picture/payment_error.html'

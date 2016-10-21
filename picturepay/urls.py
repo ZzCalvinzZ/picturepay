@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from picture.views import PictureIndexView, PaymentView, PaymentSuccessView, \
-            PaymentErrorView, StripeView
+            PaymentErrorView, StripeView, PaypalPaymentSuccessView
 
 urlpatterns = [
 
@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^payment/$', PaymentView.as_view(), name='picture-payment'),
     url(r'^stripe/$', StripeView.as_view(), name='picture-stripe'),
     url(r'^payment/success/$', PaymentSuccessView.as_view(), name='picture-payment-success'),
+    url(r'^paypal/payment/success/$', PaypalPaymentSuccessView.as_view(), name='picture-paypal-payment-success'),
     url(r'^payment/error/$', PaymentErrorView.as_view(), name='picture-payment-error'),
 
 
