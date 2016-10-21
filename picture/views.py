@@ -100,7 +100,7 @@ class PaymentView(TemplateView):
 			"item_name": "Pixel Reveal",
 			# "invoice": "unique-invoice-id",
 			"notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
-			"return_url": request.build_absolute_uri(reverse('picture-payment')),
+			"return_url": request.build_absolute_uri(reverse('picture-payment-success')),
 			"cancel_return": request.build_absolute_uri(reverse('picture-index')),
 		}
 
