@@ -185,7 +185,7 @@ def handle_payment(sender, **kwargs):
 		# Check that the receiver email is the same we previously
 		# set on the business field request. (The user could tamper
 		# with those fields on payment form before send it to PayPal)
-		if ipn_obj.receiver_email != "calvincollins_5-facilitator@hotmail.com":
+		if ipn_obj.receiver_email != settings.PAYPAL_EMAIL:
 			# Not a valid payment
 			return
 
